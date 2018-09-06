@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Examen cinta negra</p>
+
+<button onclick="myFunction()">User Agent</button>
+<button onclick="getLocation()">Localizacion</button>
+
+<p id="userAgent"></p>
+<p id="Posicion"></p>
+
+<script>
+function myFunction() {
+
+    /*
+        User agent es un atributo de la cabecera de http
+    */
+    var x = "User-agent header sent: " + navigator.userAgent;
+    console.log(x);
+    document.getElementById("userAgent").innerHTML = x;
+}
+
+var x = document.getElementById("Posicion");
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) {
+    console.log(x + position.coords.latitude + position.coords.longitude);
+    x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;
+}
+
+</script>
+</body>
+</html>
