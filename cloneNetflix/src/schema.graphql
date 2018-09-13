@@ -8,6 +8,7 @@ type Query {
     moviesGenre(genre:Genres):[Movie]
     moviesCategory(category:Categories):[Movie!]!
     moviesSuscription(suscription:Suscriptions):[Movie!]!
+    movieTitle(title:String):Movie
 }
 
 type Mutation {
