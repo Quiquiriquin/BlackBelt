@@ -1,0 +1,31 @@
+#import User,Movie,Rating,Suscription from './generated/prisma.graphql'; 
+#import Suscriptions,Genres,Rates,Categories from './generated/prisma.graphql'; 
+
+type Query {
+    users:[User!]!
+    movies: [Movie!]!
+    movie(id:ID!):Movie
+    moviesGenre(genre:Genres):[Movie]
+    moviesCategory(category:Categories):[Movie!]!
+    moviesSuscription(suscription:Suscriptions):[Movie!]!
+}
+
+type Mutation {
+
+    signup(
+        name:String!, 
+        lastname:String!, 
+        email:String!, 
+        password:String!, 
+        birth_date:String!
+    ):AuthPayload
+    login(
+        email:String!,
+        password:String!
+    ):AuthPayload
+}
+
+type AuthPayload {
+    token: String
+    user: User
+}

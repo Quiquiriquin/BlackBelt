@@ -1,0 +1,83 @@
+type User {
+  id: ID! @unique
+  name: String!
+  lastname : String!
+  email: String!
+  password : String!
+  birth_date : DateTime!
+  gender : Gender!
+  status : Bool @default(value : true)
+  paypal_id : String
+  avatar : String @default(value : "https://www.google.com.mx/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjGnI2N-6jdAhUM16wKHbQMD2EQjRx6BAgBEAU&url=http%3A%2F%2Fwww.depositodentalocon.com.mx%2Fpaginas%2Fprincipal%2F2&psig=AOvVaw1LhMunOF8Fke-CCuVj909L&ust=1536412061345503")
+}
+
+type Movie {
+  title : String!
+  category :Categories!
+  sinopsis : String!
+  rate : Rate!
+  poster : String!
+  released_date : DateTime!
+  genre : Genre!
+  length : Int!
+  video_url : String!
+  suscription_type : Suscription!
+}
+
+type Rates {
+  id: ID! @unique
+  user_id : User!
+  movie_id : Movie!
+  rate : Float!
+}
+
+type Suscriptions {
+  id: ID! @unique
+  user_id : User!
+  suscription_type : Suscription!
+  end_date : DateTime!
+  price : Integer!
+} 
+
+
+
+enum Suscription {
+  FREE
+  GOLD
+  PREMIUM
+}
+
+enum Genre {
+  HORROR
+  DRAMA
+  COMEDY
+  FANTASY
+  ACTION
+  BIO
+}
+
+enum Rate {
+  A
+  B
+  C
+}
+
+enum Categories {
+  TVSHOW
+  MOVIE
+}
+
+
+enum Gender {
+  H
+  M
+}
+
+endpoint: https://us1.prisma.sh/enrique-alvarez-barajas-c39ae6/database/dev
+datamodel: datamodel.graphql
+
+#Deploy hook
+
+hooks:
+  post-deploy:
+    - graphql get-schema --project database
