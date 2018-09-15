@@ -9,6 +9,7 @@ type User {
   status:Boolean @default(value:true)
   paypal_id:String
   avatar:String @default(value:"https://vignette.wikia.nocookie.net/bungostraydogs/images/1/1e/Profile-icon-9.png/revision/latest?cb=20171030104015")
+  suscription: Suscription!
 }
 
 type Movie {

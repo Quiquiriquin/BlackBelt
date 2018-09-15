@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/enrique-alvarez-barajas-c39ae6/database/dev
-# timestamp: Tue Sep 11 2018 20:28:00 GMT-0500 (CDT)
+# timestamp: Fri Sep 14 2018 19:24:03 GMT-0500 (CDT)
 
 type AggregateMovie {
   count: Int!
@@ -805,7 +805,18 @@ input SuscriptionCreateInput {
   suscription_type: Suscriptions!
   end_date: DateTime!
   price: Int!
-  user: UserCreateOneInput!
+  user: UserCreateOneWithoutSuscriptionInput!
+}
+
+input SuscriptionCreateOneWithoutUserInput {
+  create: SuscriptionCreateWithoutUserInput
+  connect: SuscriptionWhereUniqueInput
+}
+
+input SuscriptionCreateWithoutUserInput {
+  suscription_type: Suscriptions!
+  end_date: DateTime!
+  price: Int!
 }
 
 """An edge in a connection."""
@@ -888,7 +899,25 @@ input SuscriptionUpdateInput {
   suscription_type: Suscriptions
   end_date: DateTime
   price: Int
-  user: UserUpdateOneRequiredInput
+  user: UserUpdateOneRequiredWithoutSuscriptionInput
+}
+
+input SuscriptionUpdateOneRequiredWithoutUserInput {
+  create: SuscriptionCreateWithoutUserInput
+  connect: SuscriptionWhereUniqueInput
+  update: SuscriptionUpdateWithoutUserDataInput
+  upsert: SuscriptionUpsertWithoutUserInput
+}
+
+input SuscriptionUpdateWithoutUserDataInput {
+  suscription_type: Suscriptions
+  end_date: DateTime
+  price: Int
+}
+
+input SuscriptionUpsertWithoutUserInput {
+  update: SuscriptionUpdateWithoutUserDataInput!
+  create: SuscriptionCreateWithoutUserInput!
 }
 
 input SuscriptionWhereInput {
@@ -1012,6 +1041,7 @@ type User implements Node {
   status: Boolean
   paypal_id: String
   avatar: String
+  suscription(where: SuscriptionWhereInput): Suscription!
 }
 
 """A connection to a list of items."""
@@ -1034,11 +1064,29 @@ input UserCreateInput {
   status: Boolean
   paypal_id: String
   avatar: String
+  suscription: SuscriptionCreateOneWithoutUserInput!
 }
 
 input UserCreateOneInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutSuscriptionInput {
+  create: UserCreateWithoutSuscriptionInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutSuscriptionInput {
+  name: String!
+  lastname: String!
+  email: String!
+  password: String!
+  birth_date: DateTime!
+  gender: Genders
+  status: Boolean
+  paypal_id: String
+  avatar: String
 }
 
 """An edge in a connection."""
@@ -1139,6 +1187,7 @@ input UserUpdateDataInput {
   status: Boolean
   paypal_id: String
   avatar: String
+  suscription: SuscriptionUpdateOneRequiredWithoutUserInput
 }
 
 input UserUpdateInput {
@@ -1151,6 +1200,7 @@ input UserUpdateInput {
   status: Boolean
   paypal_id: String
   avatar: String
+  suscription: SuscriptionUpdateOneRequiredWithoutUserInput
 }
 
 input UserUpdateOneRequiredInput {
@@ -1160,9 +1210,33 @@ input UserUpdateOneRequiredInput {
   upsert: UserUpsertNestedInput
 }
 
+input UserUpdateOneRequiredWithoutSuscriptionInput {
+  create: UserCreateWithoutSuscriptionInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutSuscriptionDataInput
+  upsert: UserUpsertWithoutSuscriptionInput
+}
+
+input UserUpdateWithoutSuscriptionDataInput {
+  name: String
+  lastname: String
+  email: String
+  password: String
+  birth_date: DateTime
+  gender: Genders
+  status: Boolean
+  paypal_id: String
+  avatar: String
+}
+
 input UserUpsertNestedInput {
   update: UserUpdateDataInput!
   create: UserCreateInput!
+}
+
+input UserUpsertWithoutSuscriptionInput {
+  update: UserUpdateWithoutSuscriptionDataInput!
+  create: UserCreateWithoutSuscriptionInput!
 }
 
 input UserWhereInput {
@@ -1490,6 +1564,7 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   avatar_not_ends_with: String
+  suscription: SuscriptionWhereInput
 }
 
 input UserWhereUniqueInput {

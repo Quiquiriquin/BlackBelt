@@ -24,6 +24,10 @@ type Mutation {
         email:String!,
         password:String!
     ):AuthPayload
+
+    upgradeSuscription(
+        suscription_type:Suscriptions!
+    ):User
 }
 
 type AuthPayload {
