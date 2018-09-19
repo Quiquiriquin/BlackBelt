@@ -1,0 +1,2 @@
+endpoint: https://test-server-netflix.herokuapp.com/TEST/test
+datamodel: datamodel.graphql

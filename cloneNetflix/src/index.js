@@ -1,4 +1,4 @@
-require('dotenv').config('')
+require('dotenv').config()
 const { GraphQLServer } = require('graphql-yoga');
 const { Prisma } = require('prisma-binding');
 const Query = require('./resolvers/Query');
@@ -29,4 +29,7 @@ const server = new GraphQLServer({
 })
 
 
-module.exports = server;
+module.exports = {
+    server,
+    resolvers
+}

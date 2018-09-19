@@ -7,11 +7,13 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "nodemon nodemon -L src/bin/www"
+    "start": "nodemon nodemon -L src/bin/www",
+    "test":"jest"
   },
   "dependencies": {
     "dotenv": "^6.0.0",
     "graphql-yoga": "^1.16.2",
+    "jest": "^23.6.0",
     "prisma-binding": "^2.1.5"
   },
   "devDependencies": {

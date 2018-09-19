@@ -1,8 +1,7 @@
 const { getUserId } = require('../utils/utils');
 
-async function users(parent, args, context, info) {
-    let user = getUserId(context);
-    return context.db.query.users({},info);
+async function users(parent,args,context,info) {
+    return context.db.query.users({},info)
 }
 
 async function me(parent,args,context,info) {
