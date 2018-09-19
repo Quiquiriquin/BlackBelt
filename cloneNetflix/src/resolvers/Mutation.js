@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 const { APP_SECRET, PRICES } = require("../Const");
+const { getUserId } = require('../utils/utils');
 
 const getID = `{ id }`;
 
@@ -18,7 +19,7 @@ const queryUser = `{
     }
 }`
 
-const { getUserId } = require('../utils/utils')
+
 
 
 Date.prototype.addDays = function(days){
@@ -96,8 +97,57 @@ async function upgradeSuscription (context,args,info,parent) {
     return suscription;
   }
 
+const queryRate = `{
+    id,
+    rate,
+    movie{
+        title
+    },
+    user{
+        name,
+        lastname
+    }
+    
+}`
+
+async function addRating(parent,args,context,info) {
+    let userId = getUserId(context);
+    let newRate = await context.db.mutation.createRating({
+       data:{
+           user:{
+               connect:{
+                   id:userId
+               }
+           },
+           movie:{
+               connect:{
+                   id:args.movie_id
+               }
+           },
+           rate:args.rate
+    }},queryRate);
+
+    return newRate;
+}
+
+
+async function updateUser(parent,args,context,info) {
+    let userId = getUserId(context);
+    if(args.password) args.password = await bcrypt.hash(args.password,10);
+    
+    let updateUser = await context.db.mutation.updateUser({
+        data:{...args}, where:{
+            id:userId
+        }
+    });
+
+    return updateUser;
+}
+
 module.exports = {
     signup,
     login,
-    upgradeSuscription
+    upgradeSuscription,
+    addRating,
+    updateUser
 }
