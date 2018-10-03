@@ -1,9 +1,10 @@
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
-const { APP_SECRET, PRICES } = require("../Const");
-const { getUserId } = require('../utils/utils');
+const {APP_SECRET,PRICES} = require("../Const");
+const {getUserId} = require('../utils/utils');
 
-const getID = `{ id }`;
+
+const getID =  `{ id }`
 
 const queryUser = `{
     id,
@@ -19,53 +20,50 @@ const queryUser = `{
     }
 }`
 
-
-
-
-Date.prototype.addDays = function(days){
+Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
 }
 
 async function signup(parent,args,context,info) {
-    const password = await bcrypt.hash(args.password,10);
-
-    const user = await context.db.mutation.createUser(
+    const password = await bcrypt.hash(args.password,10)
+    
+    const user  = await context.db.mutation.createUser(
        {data:{...args,password,suscription:{
            create:{
-               suscription_type : "FREE",
-               price:0,
-               end_date: new Date().addDays(30) 
+            suscription_type:"FREE",
+            price:0,
+            end_date:new Date().addDays(30),
            }
-       }
-    }},queryUser
-    )
+       }}},queryUser)
 
-    const token = jsonwebtoken.sign({userId:user.id},APP_SECRET);
 
+
+    const token = await jsonwebtoken.sign({userId:user.id},APP_SECRET)
+                    
+ 
     return {
         token,
         user
     }
-
 }
 
 async function login(parent,args,context,info){
 
+
     const user = await context.db.query.user({
-        where:{email:args.email}
-    })
+        where:{email:args.email}})
 
-    if(!user){
-        throw new Error("Not user find");
-    }
+    if(!user) throw new Error("Not such user find");
 
-    const validPassword = await bcrypt.compare(args.password, user.password);
-    console.log(validPassword);
-    if(!validPassword) throw new Error ("Invalid password")
+    console.log(user.password,args.password)
+    const validPassword =  await bcrypt.compare(args.password,user.password);
+    console.log(validPassword)
+    if(!validPassword) throw new Error("Invalid password")
 
-    const token = jsonwebtoken.sign({userId:user.id},APP_SECRET);
+    const token = await jsonwebtoken.sign({userId:user.id},APP_SECRET)
+    console.log("----->",user)
 
     return {
         token,
@@ -74,28 +72,38 @@ async function login(parent,args,context,info){
 
 }
 
-async function upgradeSuscription (context,args,info,parent) {
-    let user = getUserId(context);
+
+
+async function upgradeSuscription(parent,args,context,info){
+    let user = getUserId(context)
+
     let days = (args.suscription_type == "PREMIUM") ? 90 : 30;
-    let updateUser = await context.db.mutation.updateUser(
+
+    // Paypal Stuff here
+
+    let updatedUser = await context.db.mutation.updateUser(
         {
-            data: {
+            data:{
                 suscription:{
-                    update:{
-                        suscription_type:args.suscription_type,
-                        end_date : new Date().addDays(days),
-                        price : PRICES[args.suscription_type]
-                    }
+                    update:
+                        {
+                            suscription_type:args.suscription_type,
+                            end_date:new Date().addDays(days),
+                            price:PRICES[args.suscription_type]
+                        }
                 }
-                
             },
             where:{
                 id:user
             }
+
         },queryUser)
 
-    return suscription;
-  }
+    return updatedUser
+
+
+}   
+
 
 const queryRate = `{
     id,
@@ -107,47 +115,49 @@ const queryRate = `{
         name,
         lastname
     }
-    
 }`
-
-async function addRating(parent,args,context,info) {
-    let userId = getUserId(context);
-    let newRate = await context.db.mutation.createRating({
-       data:{
-           user:{
-               connect:{
-                   id:userId
-               }
-           },
-           movie:{
-               connect:{
-                   id:args.movie_id
-               }
-           },
-           rate:args.rate
-    }},queryRate);
-
-    return newRate;
+async function addRating(parent,args,context,info){
+    let user_id = getUserId(context)
+    let newRate =  await context.db.mutation.createRating({data:{
+        user:{
+            connect:{
+                id:user_id
+            }
+        },
+        movie:{
+            connect:{
+                id:args.movie_id
+            }
+        },
+        rate:args.rate
+    }},queryRate)
+    return newRate
 }
 
 
-async function updateUser(parent,args,context,info) {
-    let userId = getUserId(context);
-    if(args.password) args.password = await bcrypt.hash(args.password,10);
-    
-    let updateUser = await context.db.mutation.updateUser({
-        data:{...args}, where:{
-            id:userId
+async function updateUser(parent,args,context,info){
+    let user_id = getUserId(context)
+    if(args.password) args.password = await bcrypt.hash(args.password,10)
+
+
+    let updatedUser =  await context.db.mutation.updateUser({
+        data:{...args},where:{
+            id:user_id
         }
-    });
+    })
 
-    return updateUser;
+    return updatedUser
+
 }
+
+
+
+
 
 module.exports = {
     signup,
-    login,
-    upgradeSuscription,
     addRating,
-    updateUser
+    updateUser,
+    login,
+    upgradeSuscription
 }

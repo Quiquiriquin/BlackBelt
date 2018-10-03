@@ -1,2 +1,6 @@
 endpoint: https://us1.prisma.sh/enrique-alvarez-barajas-c39ae6/production/prod
 datamodel: datamodel.graphql
+
+hooks:
+  post-deploy:
+    - graphql get-schema --project database

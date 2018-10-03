@@ -7,10 +7,12 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "nodemon nodemon -L src/bin/www",
-    "test":"jest"
+    "start": "node src/bin/www",
+    "server": "nodemon nodemon -L src/bin/www",
+    "test": "jest"
   },
   "dependencies": {
+    "bcrypt": "^3.0.1",
     "dotenv": "^6.0.0",
     "graphql-yoga": "^1.16.2",
     "jest": "^23.6.0",
