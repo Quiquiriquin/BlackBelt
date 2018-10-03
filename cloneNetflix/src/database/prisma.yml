@@ -1,4 +1,4 @@
-endpoint: ${src:PRISMA_ENDPOINT}
+endpoint: ${src:PRISMA_ENDPOINT,https://eu1.prisma.sh/enrique-alvarez-barajas-c39ae6/database/dev}
 datamodel: datamodel.graphql
 
 #Deploy hook

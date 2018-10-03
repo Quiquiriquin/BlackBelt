@@ -4,6 +4,7 @@ const { Prisma } = require('prisma-binding');
 const Query = require('./resolvers/Query');
 const Mutation = require('./resolvers/Mutation');
 const Subscription = require('./resolvers/Subscription')
+const PRISMA_ENDPOINT = process.env.PRISMA_ENDPOINT || 'https://eu1.prisma.sh/enrique-alvarez-barajas-c39ae6/database/dev';
 
 const resolvers = {
     Query,
@@ -19,7 +20,7 @@ const server = new GraphQLServer({
         ...req,
         db: new Prisma({
             typeDefs: 'src/generated/prisma.graphql',
-            endpoint: 'https://eu1.prisma.sh/enrique-alvarez-barajas-c39ae6/database/dev',
+            endpoint: PRISMA_ENDPOINT,
             debug:true
         })
     }),
